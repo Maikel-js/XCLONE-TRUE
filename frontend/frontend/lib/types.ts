@@ -42,3 +42,19 @@ export type NotificationEvent = | {
     | { type: 'connection.ready'; payload: { userId: string } }
     | { type: 'error'; payload: { reason: string } }
 
+export type LoginInput = { email: string; password: string }
+
+export type RegisterInput = {
+    username: string
+    email: string
+    displayName: string
+    password: string
+}
+
+export type WsServerEnvelope<T = unknown> = { type: string; payload: T}
+
+export type CreatePostInput = { content: string }
+export type UpdateUserInput = Partial<Pick<User, 'username' | 'email' | 'displayName' | 'bio' | 'avatar'>>
+export type FollowResult = { following: boolean }
+export type CachedUser = User & { following?: boolean }
+export type LikeResult = { postId: string }
