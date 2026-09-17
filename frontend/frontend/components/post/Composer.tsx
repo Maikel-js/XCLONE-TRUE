@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 import { Textarea } from '@/components/ui/Textarea'
 import { Button } from '@/components/ui/Button'
@@ -9,12 +9,12 @@ import { useCreatePost } from '@/lib/api/hooks/useCreatePost'
 const MAX = 500
 
 export function Composer() {
-    const { register, handleSubmit, reset, watch } = useForm<{ content: string }>({
+    const { register, handleSubmit, reset, control } = useForm<{ content: string }>({
         defaultValues: { content: '' },
     })
     const { mutate, isPending } = useCreatePost()
     const [lastError, setLastError] = useState<string | null>(null)
-    const value = watch('content') ?? ''
+    const value = useWatch({ control, name: 'content', defaultValue: '' }) ?? ''
 
     async function onSubmit({ content }: { content: string }) {
         setLastError(null)
