@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { Home, User, Search, LogOut } from 'lucide-react'
 import { useAuth } from '@/lib/auth/useAuth'
+import { ConnectionDot } from './ConnectionDot'
 
 const items = [
     { href: '/', label: 'Inicio', icon: Home },
@@ -52,10 +53,13 @@ export function Sidebar() {
                     <span className="hidden md:block">Perfil</span>
                 </Link>
             </nav>
+            <div className="mt-auto px-3">
+                <ConnectionDot />
+            </div>
             <button
                 type="button"
                 onClick={logout}
-                className="mt-auto flex items-center gap-4 rounded-full px-3 py-3 text-lg hover:bg-[var(--color-card)]"
+                className="mt-2 flex items-center gap-4 rounded-full px-3 py-3 text-lg hover:bg-[var(--color-card)]"
             >
                 <LogOut size={26} aria-hidden="true" />
                 <span className="hidden md:block">Salir</span>

@@ -1,26 +1,32 @@
 'use client'
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { useState } from "react"
-import { Toaster } from "sonner"
-import { AuthProvider } from "@/lib/auth/AuthContext"
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Toaster } from 'sonner'
+import { AuthProvider } from '@/lib/auth/AuthContext'
+import { RealtimeProvider } from '@/lib/realtime/RealtimeProvider'
 
-export function Providers({ children }: { children: React.ReactNode}) {
-    const [client] = useState(() => 
-        new QueryClient({
-            defaultOptions: {
-                queries: {
-                    staleTime: 30_000,
-                    retry: 1,
-                    refetchOnWindowFocus: false,
+export function Providers({ children }: { children: React.ReactNode }) {
+    const [client] = useState(
+        () =>
+            new QueryClient({
+                defaultOptions: {
+                    queries: {
+                        staleTime: 30_000,
+                        retry: 1,
+                        refetchOnWindowFocus: false,
+                    },
                 },
-            },
-        })
+            })
     )
 
-    return <QueryClientProvider client={client}>
-        <AuthProvider>
-            {children}
-            <Toaster richColors position="bottom-right"/>
-        </AuthProvider>
-    </QueryClientProvider>
+    return (
+        <QueryClientProvider client={client}>
+            <AuthProvider>
+                <RealtimeProvider>
+                    {children}
+                    <Toaster richColors position="bottom-right" />
+                </RealtimeProvider>
+            </AuthProvider>
+        </QueryClientProvider>
+    )
 }
