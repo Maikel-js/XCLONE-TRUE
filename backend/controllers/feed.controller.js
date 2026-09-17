@@ -18,9 +18,12 @@ async function getFeed(req, res) {
 
     const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : null;
 
+    const rawMode = typeof req.query.mode === 'string' ? req.query.mode : 'for-you';
+    const mode = rawMode === 'following' ? 'following' : 'for-you';
+
     try {
 
-        const result = await feedService.getUserFeed(userId, { limit, cursor });
+        const result = await feedService.getUserFeed(userId, { limit, cursor, mode });
         res.json(result);
 
     } catch (error) {

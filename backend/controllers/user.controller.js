@@ -8,6 +8,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$
 async function getUserById(req, res) {
 
     const userId = req.params.id;
+    const viewerId = req.userId;
 
     if (!userId) {
         return res.status(400).json({
@@ -17,7 +18,7 @@ async function getUserById(req, res) {
 
     try {
 
-        const user = await userService.getUserById(userId);
+        const user = await userService.getUserProfile(userId, viewerId);
 
         if (!user) {
             return res.status(404).json({
@@ -25,9 +26,7 @@ async function getUserById(req, res) {
             });
         }
 
-        const { passwordHash, ...publicUser } = user;
-
-        return res.status(200).json(publicUser);
+        return res.status(200).json(user);
 
     } catch (error) {
 
@@ -35,6 +34,66 @@ async function getUserById(req, res) {
             error: 'Error al obtener el usuario'
         });
 
+    }
+}
+
+async function searchUsers(req, res) {
+    const q = typeof req.query.q === 'string' ? req.query.q : '';
+    const limitRaw = parseInt(req.query.limit, 10);
+    const limit = Number.isFinite(limitRaw) ? limitRaw : 20;
+    try {
+        const users = await userService.searchUsers(q, limit);
+        return res.status(200).json({ users });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al buscar usuarios' });
+    }
+}
+
+async function getUserPosts(req, res) {
+    const userId = req.params.id;
+    const viewerId = req.userId;
+
+    if (!userId) {
+        return res.status(400).json({ error: 'ID del usuario no proporcionado' });
+    }
+
+    let limit = parseInt(req.query.limit, 10);
+    if (Number.isNaN(limit)) limit = 20;
+    if (limit < 1) limit = 1;
+    if (limit > 50) limit = 50;
+
+    const cursor = typeof req.query.cursor === 'string' ? req.query.cursor : null;
+
+    try {
+        const result = await userService.getUserPosts(userId, { cursor, limit, viewerId });
+        return res.status(200).json(result);
+    } catch (error) {
+        if (error.message === 'Cursor invalido' || error.message === 'Cursor inválido') {
+            return res.status(400).json({ error: 'Cursor inválido' });
+        }
+        return res.status(500).json({ error: 'Error al obtener posts del usuario' });
+    }
+}
+
+async function getCurrentUser(req, res) {
+    try {
+        const user = await userService.getUserProfile(req.userId, req.userId);
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' });
+        return res.status(200).json(user);
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al obtener tu perfil' });
+    }
+}
+
+async function getSuggestions(req, res) {
+    const viewerId = req.userId;
+    const limitRaw = parseInt(req.query.limit, 10);
+    const limit = Number.isFinite(limitRaw) ? limitRaw : 10;
+    try {
+        const users = await userService.getSuggestedUsers(viewerId, limit);
+        return res.status(200).json({ users });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error al obtener sugerencias' });
     }
 }
 
@@ -297,6 +356,10 @@ async function deleteUser(req, res) {
 
 module.exports = {
     getUserById,
+    getUserPosts,
+    searchUsers,
+    getCurrentUser,
+    getSuggestions,
     createUser,
     updateUser,
     deleteUser

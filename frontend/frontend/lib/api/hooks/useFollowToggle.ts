@@ -2,13 +2,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { followApi } from '../endpoints'
 import { queryKeys } from '../queryKeys'
-import type { CachedUser, FollowResult } from '@/lib/types'
+import type { CachedUser } from '@/lib/types'
 
 type Variables = { userId: string; following: boolean }
 
 export function useFollowToggle() {
     const qc = useQueryClient()
-    return useMutation<FollowResult, Error, Variables>({
+    return useMutation<{ message: string }, Error, Variables>({
         mutationFn: ({ userId, following }) =>
             following ? followApi.unfollow(userId) : followApi.follow(userId),
         onMutate: async ({ userId, following }) => {
@@ -32,6 +32,8 @@ export function useFollowToggle() {
         },
         onSettled: (_data, _err, vars) => {
             qc.invalidateQueries({ queryKey: queryKeys.user(vars.userId) })
+            qc.invalidateQueries({ queryKey: queryKeys.suggestions() })
         },
     })
 }
+

@@ -8,7 +8,12 @@
     --accent: #1d9bf0;
     --accent-hover: #1a8cd8;
     --danger: #f4212e;
+    --like: #f91880;
+    --retweet: #00ba7c;
     --card: #16181c;
+    --hover: rgba(231, 233, 234, 0.03);
+    --hover-strong: rgba(231, 233, 234, 0.1);
+    --mask: rgba(91, 112, 131, 0.4);
 }
 
 @theme inline {
@@ -19,13 +24,57 @@
     --color-accent: var(--accent);
     --color-accent-hover: var(--accent-hover);
     --color-danger: var(--danger);
+    --color-like: var(--like);
+    --color-retweet: var(--retweet);
     --color-card: var(--card);
     --font-sans: var(--font-geist-sans);
     --font-mono: var(--font-geist-mono);
 }
 
+html,
 body {
     background: var(--background);
     color: var(--foreground);
     font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+button, a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.text-hover-accent {
+    position: relative;
+}
+.text-hover-accent::before {
+    content: "";
+    position: absolute;
+    inset: -8px -8px;
+    border-radius: 9999px;
+    background: transparent;
+    pointer-events: none;
+    transition: background-color 120ms ease;
+}
+.text-hover-accent:hover::before {
+    background: rgba(29, 155, 240, 0.1);
+}
+.text-hover-danger::before { content: ""; position: absolute; inset: -8px -8px; border-radius: 9999px; pointer-events: none; }
+.text-hover-danger:hover::before { background: rgba(244, 33, 46, 0.1); }
+.text-hover-like::before { content: ""; position: absolute; inset: -8px -8px; border-radius: 9999px; pointer-events: none; }
+.text-hover-like:hover::before { background: rgba(249, 24, 128, 0.1); }
+.text-hover-retweet::before { content: ""; position: absolute; inset: -8px -8px; border-radius: 9999px; pointer-events: none; }
+.text-hover-retweet:hover::before { background: rgba(0, 186, 124, 0.1); }
+
+.nav-pill {
+    transition: background-color 120ms ease;
+}
+.nav-pill:hover {
+    background: var(--hover-strong);
+}
+
+.card-hover:hover {
+    background: var(--hover);
+}
+
+.divider {
+    border-bottom: 1px solid var(--border);
 }

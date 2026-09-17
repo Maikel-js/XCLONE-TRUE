@@ -18,7 +18,8 @@ const schema = z.object({
         .regex(/^[a-zA-Z0-9_]+$/, 'Solo letras, números y _'),
     email: z.string().email('Email inválido'),
     displayName: z.string().min(1, 'Requerido'),
-    bio: z.string().max(280, 'Máximo 280 caracteres').optional(),
+    bio: z.string().max(160, 'Máximo 160 caracteres').optional(),
+    avatar: z.union([z.literal(''), z.string().url('Debe ser una URL válida')]).optional(),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -42,6 +43,7 @@ export function EditProfileModal({ open, onClose, user }: Props) {
                 email: user.email ?? '',
                 displayName: user.displayName,
                 bio: user.bio ?? '',
+                avatar: user.avatar ?? '',
             })
         }
     }, [open, user, reset])
@@ -65,6 +67,7 @@ export function EditProfileModal({ open, onClose, user }: Props) {
                 <Input type="email" placeholder="Email" {...register('email')} error={errors.email?.message} />
                 <Input placeholder="Nombre a mostrar" {...register('displayName')} error={errors.displayName?.message} />
                 <Input placeholder="Bio" {...register('bio')} error={errors.bio?.message} />
+                <Input placeholder="URL del avatar (https://…)" {...register('avatar')} error={errors.avatar?.message} />
                 <div className="flex justify-end gap-2">
                     <Button type="button" variant="ghost" onClick={onClose}>
                         Cancelar

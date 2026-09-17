@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Composer } from '@/components/post/Composer'
 import { PostCard } from '@/components/post/PostCard'
 import { Spinner } from '@/components/ui/Spinner'
@@ -7,9 +7,11 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { Button } from '@/components/ui/Button'
 import { Header } from '@/components/layout/Header'
+import { FeedTabs, type FeedTab } from '@/components/feed/FeedTabs'
 import { useFeed } from '@/lib/api/hooks/useFeed'
 
 export default function Home() {
+    const [mode, setMode] = useState<FeedTab>('for-you')
     const {
         data,
         isLoading,
@@ -19,7 +21,7 @@ export default function Home() {
         fetchNextPage,
         hasNextPage,
         isFetchingNextPage,
-    } = useFeed()
+    } = useFeed(mode)
 
     const sentinelRef = useRef<HTMLDivElement | null>(null)
 
@@ -42,8 +44,11 @@ export default function Home() {
 
     return (
         <>
-            <Header title="Inicio" />
-            <Composer />
+            <div className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[rgba(0,0,0,0.65)] backdrop-blur md:top-0">
+                <Header title="Inicio" className="border-b-0 backdrop-blur-none bg-transparent" />
+                <FeedTabs value={mode} onChange={setMode} />
+            </div>
+            {mode === 'for-you' && <Composer />}
             {isLoading ? (
                 <Spinner label="Cargando feed" />
             ) : isError ? (
@@ -55,8 +60,12 @@ export default function Home() {
                 </div>
             ) : posts.length === 0 ? (
                 <EmptyState
-                    title="Nada por aquí todavía"
-                    description="Sé el primero en postear algo."
+                    title={mode === 'following' ? 'Aún no sigues a nadie' : 'Nada por aquí todavía'}
+                    description={
+                        mode === 'following'
+                            ? 'Sigue usuarios para ver su contenido aquí.'
+                            : 'Sé el primero en postear algo.'
+                    }
                 />
             ) : (
                 <>

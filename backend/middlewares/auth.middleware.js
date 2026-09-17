@@ -34,7 +34,7 @@ function authMiddleware(req, res, next) {
 
     } catch (error) {
         return res.status(401).json({
-            error: 'Formato de token inválido'
+            error: 'Token inválido o expirado'
         });
     }
 }

@@ -72,6 +72,13 @@ async function updatePost(req, res) {
     }
 
     try {
+        const existing = await postService.getPostById(postId);
+        if (!existing) {
+            return res.status(404).json({ error: 'Post no encontrado' });
+        }
+        if (existing.authorId !== req.userId) {
+            return res.status(403).json({ error: 'No puedes modificar un post ajeno' });
+        }
         const updatedPost = await postService.updatePost(postId, postData);
         res.status(200).json(updatedPost);
     } catch (error) {
@@ -92,6 +99,13 @@ async function deletePost(req, res) {
     }
 
     try {
+        const existing = await postService.getPostById(postId);
+        if (!existing) {
+            return res.status(404).json({ error: 'Post no encontrado' });
+        }
+        if (existing.authorId !== req.userId) {
+            return res.status(403).json({ error: 'No puedes eliminar un post ajeno' });
+        }
         const deletedPost = await postService.deletePost(postId);
 
         res.status(200).json(deletedPost);

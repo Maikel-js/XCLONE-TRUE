@@ -16,11 +16,11 @@ export function ConnectionDot() {
         <span
             role="status"
             aria-live="polite"
-          className="ml-auto flex items-center gap-2 px-3 text-sm text-[var(--color-muted)]"
             title={`WebSocket: ${label}`}
+            className="flex items-center gap-2 rounded-full px-3 py-2 text-xs text-[var(--color-muted)]"
         >
             <span className={clsx('h-2 w-2 rounded-full', color)} aria-hidden="true" />
-            <span className="hidden md:inline">{label}</span>
+            <span className="hidden lg:inline">{label}</span>
         </span>
     )
 }

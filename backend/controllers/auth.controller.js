@@ -1,4 +1,19 @@
 const authService = require('../services/auth.service');
+const userService = require('../services/user.service');
+
+async function me(req, res) {
+    try {
+        const user = await userService.getUserById(req.userId);
+        if (!user) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const { passwordHash, ...publicUser } = user;
+        return res.status(200).json(publicUser);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Error al validar sesión' });
+    }
+}
 
 async function register(req, res) {
 
@@ -86,5 +101,6 @@ async function login(req, res) {
 
 module.exports = {
     register,
-    login
+    login,
+    me
 };

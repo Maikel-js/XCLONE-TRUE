@@ -7,8 +7,9 @@ export function useDeletePost() {
     const qc = useQueryClient()
     return useMutation({
         mutationFn: postApi.delete,
-        onSuccess: () => {
-            qc.invalidateQueries({ queryKey: queryKeys.feed() })
+        onSuccess: (_data, id) => {
+            qc.invalidateQueries({ queryKey: queryKeys.feedList() })
+            qc.removeQueries({ queryKey: queryKeys.post(id) })
         },
     })
 }

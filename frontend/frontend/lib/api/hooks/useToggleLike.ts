@@ -11,22 +11,25 @@ function updateFeedCache(
     postId: string,
     updater: (likesCount: number, likedByMe: boolean) => { likesCount: number; likedByMe: boolean }
 ) {
-    const cached = qc.getQueryData<{
-        pages: FeedPage[]
-        pageParams: unknown[]
-    }>(queryKeys.feed())
-    if (!cached) return
-    qc.setQueryData(queryKeys.feed(), {
-        ...cached,
-        pages: cached.pages.map((page) => ({
-            ...page,
-            items: page.items.map((p) =>
-                p.id === postId
-                    ? { ...p, ...updater(p.likesCount, p.likedByMe) }
-                    : p
-            ),
-        })),
-    })
+    for (const mode of ['for-you', 'following'] as const) {
+        const key = queryKeys.feed(mode)
+        const cached = qc.getQueryData<{
+            pages: FeedPage[]
+            pageParams: unknown[]
+        }>(key)
+        if (!cached) continue
+        qc.setQueryData(key, {
+            ...cached,
+            pages: cached.pages.map((page) => ({
+                ...page,
+                items: page.items.map((p) =>
+                    p.id === postId
+                        ? { ...p, ...updater(p.likesCount, p.likedByMe) }
+                        : p
+                ),
+            })),
+        })
+    }
 }
 
 export function useToggleLike() {
@@ -48,7 +51,7 @@ export function useToggleLike() {
             }))
         },
         onSettled: () => {
-            qc.invalidateQueries({ queryKey: queryKeys.feed() })
+            qc.invalidateQueries({ queryKey: queryKeys.feedList() })
         },
     })
 }

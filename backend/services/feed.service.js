@@ -1,7 +1,7 @@
 const prisma = require('../lib/prismaClient')
 const { encodeCursor, decodeCursor } = require('../lib/cursor')
 
-async function getUserFeed(userId, { limit, cursor }) {
+async function getUserFeed(userId, { limit, cursor, mode = 'for-you' }) {
 
     //Id de usuarios seguidos
 
@@ -24,13 +24,18 @@ async function getUserFeed(userId, { limit, cursor }) {
         }
     }
 
-    //3 Rama OR: mios + de seguidos + likeados por mi
+    //3 Rama OR: según el modo del timeline
 
-    const baseOR = [
-        { authorId: userId },
-        { authorId: { in: following } },
-        { likes: { some: { userId } } }
-    ]
+    let baseOR
+    if (mode === 'following') {
+        baseOR = [{ authorId: { in: following } }]
+    } else {
+        baseOR = [
+            { authorId: userId },
+            { authorId: { in: following } },
+            { likes: { some: { userId } } }
+        ]
+    }
 
     // 4 Cursor: mas antiguos que el ultimo item de la pagina anterior
 
@@ -97,6 +102,7 @@ async function getUserFeed(userId, { limit, cursor }) {
         id: p.id,
         content: p.content,
         createdAt: p.createdAt,
+        authorId: p.authorId,
         author: p.author,
         likesCount: p._count.likes,
         likedByMe: likedSet.has(p.id)

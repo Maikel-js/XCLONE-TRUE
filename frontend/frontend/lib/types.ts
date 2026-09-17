@@ -18,6 +18,9 @@ export type Post = {
     author: Author
     likesCount: number
     likedByMe: boolean
+    repliesCount?: number
+    repostsCount?: number
+    bookmarkedByMe?: boolean
 }
 
 export type FeedPage = {
@@ -55,6 +58,10 @@ export type WsServerEnvelope<T = unknown> = { type: string; payload: T}
 
 export type CreatePostInput = { content: string }
 export type UpdateUserInput = Partial<Pick<User, 'username' | 'email' | 'displayName' | 'bio' | 'avatar'>>
-export type FollowResult = { following: boolean }
-export type CachedUser = User & { following?: boolean }
-export type LikeResult = { postId: string }
+export type CachedUser = User & {
+    following?: boolean
+    followers?: number
+    followingCount?: number
+    posts?: number
+    location?: string
+}

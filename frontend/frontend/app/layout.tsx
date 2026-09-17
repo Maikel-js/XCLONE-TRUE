@@ -15,8 +15,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "XClone",
-  description: "Clon de X con Next.js",
+  title: {
+    default: "XClone — Qué está pasando",
+    template: "%s | XClone",
+  },
+  description: "Red social de microblogging al estilo X: feed, perfiles, búsqueda y tiempo real.",
+  applicationName: "XClone",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

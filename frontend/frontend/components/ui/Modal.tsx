@@ -1,14 +1,18 @@
 'use client'
 import { useEffect, useRef } from 'react'
+import clsx from 'clsx'
+import { X } from 'lucide-react'
 
 type ModalProps = {
     open: boolean
     onClose: () => void
-    title: string
+    title?: string
+    hideClose?: boolean
+    className?: string
     children: React.ReactNode
 }
 
-export function Modal({ open, onClose, title, children }: ModalProps) {
+export function Modal({ open, onClose, title, hideClose, className, children }: ModalProps) {
     const ref = useRef<HTMLDialogElement | null>(null)
 
     useEffect(() => {
@@ -29,11 +33,26 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
     return (
         <dialog
             ref={ref}
-            aria-labelledby="modal-title"
-            className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 text-[var(--color-foreground)] backdrop:bg-black/70"
+            aria-labelledby={title ? 'modal-title' : undefined}
+            className={clsx(
+                'rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-foreground)] backdrop:bg-black/70',
+                className ?? 'p-6 max-w-lg w-full'
+            )}
         >
-            <h2 id="modal-title" className="text-lg font-bold">{title}</h2>
-            <div className="mt-4">{children}</div>
+            {title && !hideClose && (
+                <div className="mb-4 flex items-center justify-between">
+                    <h2 id="modal-title" className="text-lg font-bold">{title}</h2>
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        aria-label="Cerrar"
+                        className="rounded-full p-2 hover:bg-[var(--hover-strong)]"
+                    >
+                        <X size={18} aria-hidden="true" />
+                    </button>
+                </div>
+            )}
+            {children}
         </dialog>
     )
 }

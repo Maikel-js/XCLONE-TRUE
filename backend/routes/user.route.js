@@ -5,8 +5,17 @@
     const userController = require('../controllers/user.controller');
 
     const authMiddleware = require('../middlewares/auth.middleware');
+    const optionalAuth = require('../middlewares/optionalAuth.middleware');
 
-    router.get('/:id', userController.getUserById);
+    router.get('/search', optionalAuth, userController.searchUsers);
+
+    router.get('/suggestions', optionalAuth, userController.getSuggestions);
+
+    router.get('/me', authMiddleware, userController.getCurrentUser);
+
+    router.get('/:id/posts', optionalAuth, userController.getUserPosts);
+
+    router.get('/:id', optionalAuth, userController.getUserById);
     
     router.post('/', userController.createUser);
 

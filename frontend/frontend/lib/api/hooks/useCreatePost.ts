@@ -8,7 +8,7 @@ export function useCreatePost() {
     return useMutation({
         mutationFn: postApi.create,
         onSuccess: () => {
-            qc.invalidateQueries({ queryKey: queryKeys.feed() })
+            qc.invalidateQueries({ queryKey: queryKeys.feedList() })
         },
     })
 }

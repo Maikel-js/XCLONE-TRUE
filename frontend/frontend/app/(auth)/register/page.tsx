@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { authApi } from '@/lib/api/endpoints'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
+import { BrandMark } from '@/components/brand/BrandMark'
 
 const schema = z.object({
     username: z
@@ -48,22 +49,32 @@ export default function RegisterPage() {
 
     return (
         <main className="flex min-h-screen items-center justify-center p-6">
-            <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-sm space-y-4">
-                <h1 className="text-2xl font-bold">Crear cuenta</h1>
-                <Input placeholder="Username" {...register('username')} error={errors.username?.message} />
-                <Input type="email" placeholder="Email" {...register('email')} error={errors.email?.message} />
-                <Input placeholder="Nombre a mostrar" {...register('displayName')} error={errors.displayName?.message} />
-                <Input type="password" placeholder="Contraseña" {...register('password')} error={errors.password?.message} />
-                <Button type="submit" disabled={isSubmitting} fullWidth>
-                    {isSubmitting ? 'Creando…' : 'Registrarse'}
-                </Button>
-                <p className="text-center text-sm text-[var(--color-muted)]">
+            <div className="w-full max-w-md">
+                <div className="mb-8 flex justify-center">
+                    <BrandMark size={56} />
+                </div>
+                <h1 className="mb-2 text-center text-3xl font-extrabold tracking-tight">
+                    Crea tu cuenta
+                </h1>
+                <p className="mb-6 text-center text-sm text-[var(--color-muted)]">
+                    Únete a XClone y comparte lo que pasa ahora mismo.
+                </p>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                    <Input placeholder="Username" autoComplete="username" {...register('username')} error={errors.username?.message} />
+                    <Input type="email" placeholder="Email" autoComplete="email" {...register('email')} error={errors.email?.message} />
+                    <Input placeholder="Nombre a mostrar" autoComplete="name" {...register('displayName')} error={errors.displayName?.message} />
+                    <Input type="password" placeholder="Contraseña" autoComplete="new-password" {...register('password')} error={errors.password?.message} />
+                    <Button type="submit" disabled={isSubmitting} fullWidth>
+                        {isSubmitting ? 'Creando…' : 'Registrarse'}
+                    </Button>
+                </form>
+                <p className="mt-6 text-center text-sm text-[var(--color-muted)]">
                     ¿Ya tienes cuenta?{' '}
                     <Link href="/login" className="text-[var(--color-accent)] hover:underline">
                         Inicia sesión
                     </Link>
                 </p>
-            </form>
+            </div>
         </main>
     )
 }
