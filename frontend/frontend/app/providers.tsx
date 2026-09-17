@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Toaster } from 'sonner'
 import { AuthProvider } from '@/lib/auth/AuthContext'
 import { RealtimeProvider } from '@/lib/realtime/RealtimeProvider'
+import { ErrorBoundary } from '@/components/system/ErrorBoundary'
 
 export function Providers({ children }: { children: React.ReactNode }) {
     const [client] = useState(
@@ -20,13 +21,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
     )
 
     return (
-        <QueryClientProvider client={client}>
-            <AuthProvider>
-                <RealtimeProvider>
-                    {children}
-                    <Toaster richColors position="bottom-right" />
-                </RealtimeProvider>
-            </AuthProvider>
-        </QueryClientProvider>
+        <ErrorBoundary>
+            <QueryClientProvider client={client}>
+                <AuthProvider>
+                    <RealtimeProvider>
+                        {children}
+                        <Toaster richColors position="bottom-right" />
+                    </RealtimeProvider>
+                </AuthProvider>
+            </QueryClientProvider>
+        </ErrorBoundary>
     )
 }
