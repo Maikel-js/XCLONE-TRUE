@@ -10,4 +10,8 @@ router.post('/login', require('../controllers/auth.controller').login);
 
 router.get('/me', authMiddleware, require('../controllers/auth.controller').me);
 
+router.get('/oauth/:provider', require('../controllers/oauth.controller').start);
+
+router.get('/oauth/:provider/callback', require('../controllers/oauth.controller').callback);
+
 module.exports = router;

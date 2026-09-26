@@ -43,11 +43,14 @@ async function register(userData) {
 }
 
 
-async function login(email, password) {
+async function login(identifier, password) {
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
         where: {
-            email
+            OR: [
+                { email: identifier },
+                { username: identifier }
+            ]
         }
     });
 

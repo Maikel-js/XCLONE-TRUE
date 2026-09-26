@@ -45,7 +45,7 @@ export type NotificationEvent = | {
     | { type: 'connection.ready'; payload: { userId: string } }
     | { type: 'error'; payload: { reason: string } }
 
-export type LoginInput = { email: string; password: string }
+export type LoginInput = { identifier: string; password: string }
 
 export type RegisterInput = {
     username: string

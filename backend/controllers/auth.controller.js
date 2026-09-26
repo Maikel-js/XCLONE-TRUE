@@ -62,21 +62,22 @@ async function register(req, res) {
 
 async function login(req, res) {
 
-    const { email, password } = req.body;
+    const identifier = req.body.identifier || req.body.email;
+    const { password } = req.body;
 
     if (
-        typeof email !== 'string' ||
+        typeof identifier !== 'string' ||
         typeof password !== 'string'
     ) {
         return res.status(400).json({
-            error: 'Email y password son requeridos'
+            error: 'Email o username y password son requeridos'
         });
     }
 
     try {
 
         const token = await authService.login(
-            email,
+            identifier,
             password
         );
 
