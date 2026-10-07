@@ -13,6 +13,7 @@ export type Author = Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>
 export type Post = {
     id: string
     content: string
+    mediaUrl?: string | null
     createdAt: string
     authorId: string
     author: Author
@@ -56,7 +57,7 @@ export type RegisterInput = {
 
 export type WsServerEnvelope<T = unknown> = { type: string; payload: T}
 
-export type CreatePostInput = { content: string }
+export type CreatePostInput = { content: string; image?: File | null; gifUrl?: string }
 export type UpdateUserInput = Partial<Pick<User, 'username' | 'email' | 'displayName' | 'bio' | 'avatar'>>
 export type CachedUser = User & {
     following?: boolean

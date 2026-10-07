@@ -1,94 +1,142 @@
 'use client'
+
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
-import { Home, Search, User, Bell, LogOut, Feather } from 'lucide-react'
+import {
+    Bell,
+    Feather,
+    Home,
+    LogOut,
+    MessageCircle,
+    MoreHorizontal,
+    Search,
+    User,
+    UserPlus,
+} from 'lucide-react'
+import { toast } from 'sonner'
 import { useAuth } from '@/lib/auth/useAuth'
 import { BrandMark } from '@/components/brand/BrandMark'
-import { ConnectionDot } from './ConnectionDot'
 import { ComposerDialog } from '@/components/post/ComposerDialog'
+import { ConnectionDot } from './ConnectionDot'
+import { GrokMark } from '../brand/GrokMark'
+import { ComponentType } from 'react'
 
-type NavItem = { href: string; label: string; icon: typeof Home; match?: (p: string) => boolean }
+type NavItem = {
+    href?: string
+    label: string
+    icon: ComponentType<{size?: number; strokeWidth?: number}>
+    match?: (pathname: string) => boolean
+}
 
 const items: NavItem[] = [
     { href: '/', label: 'Inicio', icon: Home, match: (p) => p === '/' },
     { href: '/search', label: 'Buscar', icon: Search, match: (p) => p.startsWith('/search') },
-    { href: '/notifications', label: 'Notificaciones', icon: Bell, match: (p) => p.startsWith('/notifications') },
+    {
+        href: '/notifications',
+        label: 'Notificaciones',
+        icon: Bell,
+        match: (p) => p.startsWith('/notifications'),
+    },
+    { label: 'Comunidades', icon: UserPlus },
+    { label: 'Mensajes', icon: MessageCircle },
+    { href: '/grok', label: 'Grok', icon: GrokMark, match: (p) => p.startsWith('/grok') },
 ]
 
 export function Sidebar() {
     const pathname = usePathname()
-    const { userId, logout, username } = useAuth()
+    const { userId, logout } = useAuth()
     const profileHref = userId ? `/profile/${userId}` : '/profile'
 
-    const isActive = (item: NavItem) =>
-        item.href === '/profile'
-            ? pathname.startsWith('/profile')
-            : item.match
-              ? item.match(pathname)
-              : pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
-
     return (
-        <aside className="sticky top-0 hidden h-screen w-20 shrink-0 flex-col justify-between border-r border-[var(--color-border)] px-2 py-3 md:flex md:w-64 md:px-3">
-            <div className="flex flex-col">
+        <aside className="sticky top-0 hidden h-screen w-20 shrink-0 flex-col justify-between border-r border-[var(--color-border)] px-2 py-3 md:flex xl:w-[120px]">
+            <div className="flex flex-col items-center">
                 <Link
                     href="/"
-                    aria-label="XClone inicio"
-                    className="mb-1 inline-flex h-12 w-12 items-center justify-center rounded-full text-[var(--color-foreground)] hover:bg-[var(--hover-strong)]"
+                    aria-label="XClone: inicio"
+                    title="Inicio"
+                    className="mb-3 flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)] hover:bg-[var(--hover-strong)]"
                 >
-                    <BrandMark size={26} />
+                    <BrandMark size={30} />
                 </Link>
-                <nav className="flex flex-col gap-1">
-                    {items.map(({ href, label, icon: Icon }) => {
-                        const active = isActive({ href, label, icon: Icon })
-                        return (
+
+                <nav aria-label="Navegación principal" className="flex flex-col items-center gap-2">
+                    {items.map(({ href, label, icon: Icon, match }) => {
+                        const active = href
+                            ? match
+                                ? match(pathname)
+                                : pathname === href
+                            : false
+
+                        const className = clsx(
+                            'nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]',
+                            active && 'font-bold'
+                        )
+
+                        return href ? (
                             <Link
-                                key={href}
+                                key={label}
                                 href={href}
+                                aria-label={label}
                                 aria-current={active ? 'page' : undefined}
-                                className={clsx(
-                                    'nav-pill flex items-center gap-4 rounded-full px-3 py-3 text-xl transition',
-                                    active ? 'font-bold text-[var(--color-foreground)]' : 'text-[var(--color-foreground)]'
-                                )}
+                                title={label}
+                                className={className}
                             >
-                                <Icon size={26} strokeWidth={active ? 2.4 : 2} aria-hidden="true" />
-                                <span className="hidden lg:inline">{label}</span>
+                                <Icon size={28} strokeWidth={active ? 2.5 : 2} aria-hidden="true" />
                             </Link>
+                        ) : (
+                            <button
+                                key={label}
+                                type="button"
+                                aria-label={label}
+                                title={label}
+                                className={className}
+                                onClick={() => toast.info(`${label}: no disponible`)}
+                            >
+                                <Icon size={28} aria-hidden="true" />
+                            </button>
                         )
                     })}
+
                     <Link
                         href={profileHref}
+                        aria-label="Perfil"
                         aria-current={pathname.startsWith('/profile') ? 'page' : undefined}
-                        className={clsx(
-                            'nav-pill flex items-center gap-4 rounded-full px-3 py-3 text-xl transition',
-                            pathname.startsWith('/profile')
-                                ? 'font-bold text-[var(--color-foreground)]'
-                                : 'text-[var(--color-foreground)]'
-                        )}
+                        title="Perfil"
+                        className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]"
                     >
-                        <User size={26} aria-hidden="true" />
-                        <span className="hidden lg:inline">Perfil</span>
+                        <User size={28} aria-hidden="true" />
                     </Link>
+
+                    <button
+                        type="button"
+                        aria-label="Más opciones"
+                        title="Más opciones"
+                        className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]"
+                        onClick={() => toast.info('Más opciones no disponibles')}
+                    >
+                        <MoreHorizontal size={28} aria-hidden="true" />
+                    </button>
                 </nav>
-                <div className="mt-4 px-1">
+
+                <div className="mt-3 w-14">
                     <ComposerDialog
-                        trigger={
-                            <span className="hidden lg:block">Postear</span>
-                        }
-                        compactTrigger={<Feather size={24} aria-hidden="true" />}
+                        trigger={<Feather size={24} aria-hidden="true" />}
+                        triggerClassName="flex h-14 w-14 items-center justify-center rounded-full bg-[#eff3f4] text-black transition hover:bg-[#d7dbdc]"
                     />
                 </div>
             </div>
-            <div className="flex flex-col gap-2">
+
+            <div className="flex flex-col items-center gap-2">
                 <ConnectionDot />
                 <button
                     type="button"
                     onClick={logout}
                     aria-label="Cerrar sesión"
-                    className="nav-pill flex items-center gap-4 rounded-full px-3 py-3 text-xl text-[var(--color-muted)]"
+                    title="Cerrar sesión"
+                    className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-muted)]"
                 >
                     <LogOut size={24} aria-hidden="true" />
-                    <span className="hidden lg:inline">{username ? `Salir (@${username})` : 'Salir'}</span>
                 </button>
             </div>
         </aside>

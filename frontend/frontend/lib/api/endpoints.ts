@@ -33,7 +33,14 @@ export const userApi = {
 
 export const postApi = {
     getById: (id: string) => apiFetch<Post>(`/posts/${id}`),
-    create: (input: CreatePostInput) => apiFetch<Post>('/posts', { method: 'POST', body: input }),
+    create: (input: CreatePostInput) => {
+        const body = new FormData()
+        body.append('content', input.content)
+        if (input.image) body.append('image', input.image)
+        if (input.gifUrl) body.append('gifUrl', input.gifUrl)
+
+        return apiFetch<Post>('/posts', { method: 'POST', body })
+    },
     delete: (id: string) => apiFetch<Post>(`/posts/${id}`, { method: 'DELETE' })
 }
 

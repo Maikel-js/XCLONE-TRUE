@@ -6,7 +6,6 @@ import { Spinner } from '@/components/ui/Spinner'
 import { EmptyState } from '@/components/ui/EmptyState'
 import { ErrorMessage } from '@/components/ui/ErrorMessage'
 import { Button } from '@/components/ui/Button'
-import { Header } from '@/components/layout/Header'
 import { FeedTabs, type FeedTab } from '@/components/feed/FeedTabs'
 import { useFeed } from '@/lib/api/hooks/useFeed'
 
@@ -44,8 +43,7 @@ export default function Home() {
 
     return (
         <>
-            <div className="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[rgba(0,0,0,0.65)] backdrop-blur md:top-0">
-                <Header title="Inicio" className="border-b-0 backdrop-blur-none bg-transparent" />
+            <div className="sticky top-0 z-20 bg-[rgba(0,0,0,0.72)] backdrop-blur">
                 <FeedTabs value={mode} onChange={setMode} />
             </div>
             {mode === 'for-you' && <Composer />}

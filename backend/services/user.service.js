@@ -108,6 +108,7 @@ async function getUserPosts(userId, { cursor, limit = 20, viewerId } = {}) {
     const items = page.map((p) => ({
         id: p.id,
         content: p.content,
+        mediaUrl: p.mediaUrl,
         createdAt: p.createdAt,
         authorId: p.authorId,
         author: {

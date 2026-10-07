@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import clsx from 'clsx'
-import { MoreHorizontal, MessageCircle, Repeat2, Bookmark, Share, Trash2, Pencil } from 'lucide-react'
+import { BadgeCheck, EyeOff, MoreHorizontal, MessageCircle, Repeat2, Bookmark, Share, Trash2, Pencil } from 'lucide-react'
 import { Avatar } from '../ui/Avatar'
 import { Modal } from '../ui/Modal'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
@@ -47,7 +47,7 @@ function ActionPlaceholder({
             type="button"
             aria-label={label}
             disabled
-            onClick={() => toast.info(`${label}: próximamente`)}
+            onClick={() => toast.info(`${label}: no está disponible`)}
             className={clsx(
                 'text-hover-accent group relative flex items-center gap-1 rounded-full px-2 py-1 text-[var(--color-muted)] disabled:cursor-not-allowed disabled:opacity-60',
                 color,
@@ -68,6 +68,15 @@ export function PostCard({ post }: PostCardProps) {
     const [confirm, setConfirm] = useState(false)
     const [menu, setMenu] = useState(false)
     const isOwner = !!userId && post.author.id === userId
+    const isVerifiedDemoAuthor = post.author.username.toLowerCase() === 'mouredev'
+    const mediaUrl = post.mediaUrl ?? (
+        post.content.toLowerCase().includes('mouredev.link/desarrolloia')
+            ? '/media/desarrollo-ia-preview.svg'
+            : null
+    )
+    const mediaSrc = mediaUrl?.startsWith('/uploads/')
+        ? `${process.env.NEXT_PUBLIC_API_BASE ?? ''}${mediaUrl}`
+        : mediaUrl
 
     async function share() {
         const url = `${window.location.origin}/profile/${post.author.id}`
@@ -84,7 +93,7 @@ export function PostCard({ post }: PostCardProps) {
     }
 
     return (
-        <article className="border-b border-[var(--color-border)] px-4 py-3 transition hover:bg-[var(--hover)]">
+        <article className="border-b border-[var(--color-border)] px-5 py-4 transition hover:bg-[var(--hover)]">
             <div className="flex gap-3">
                 <Link href={`/profile/${post.author.id}`} aria-label={`Perfil de ${post.author.displayName}`}>
                     <Avatar src={post.author.avatar} alt={post.author.displayName} />
@@ -92,12 +101,12 @@ export function PostCard({ post }: PostCardProps) {
                 <div className="min-w-0 flex-1">
                     <header className="flex items-start justify-between gap-2">
                         <div className="flex min-w-0 flex-wrap items-baseline gap-x-1">
-                            <Link
-                                href={`/profile/${post.author.id}`}
-                                className="truncate font-bold hover:underline"
-                            >
+                            <Link href={`/profile/${post.author.id}`} className="truncate text-[17px] font-bold hover:underline">
                                 {post.author.displayName}
                             </Link>
+                            {isVerifiedDemoAuthor && (
+                                <BadgeCheck size={19} fill="var(--color-accent)" className="shrink-0 text-black" aria-label="Verified" />
+                            )}
                             <span className="truncate text-sm text-[var(--color-muted)]">
                                 @{post.author.username}
                             </span>
@@ -106,54 +115,87 @@ export function PostCard({ post }: PostCardProps) {
                                 {timeAgo(post.createdAt)}
                             </time>
                         </div>
-                        {isOwner && (
-                            <>
-                                <button
-                                    type="button"
-                                    aria-label="Más opciones"
-                                    aria-haspopup="menu"
-                                    aria-expanded={menu}
-                                    onClick={() => setMenu(true)}
-                                    disabled={isPending}
-                                    className="-mr-2 rounded-full p-2 text-[var(--color-muted)] hover:bg-[rgba(29,155,240,0.1)] hover:text-[var(--color-accent)] disabled:opacity-50"
-                                >
-                                    <MoreHorizontal size={18} aria-hidden="true" />
-                                </button>
-                                <Modal open={menu} onClose={() => setMenu(false)} title="Opciones del post" className="max-w-xs w-full p-0">
-                                    <ul className="text-sm">
+                        <div className="-mr-2 flex shrink-0 items-center text-[var(--color-muted)]">
+                            <button
+                                type="button"
+                                aria-label="Not interested"
+                                title="Not interested"
+                                onClick={() => toast.info('Preferencias del feed no disponibles')}
+                                className="rounded-full p-2 hover:bg-[rgba(29,155,240,0.1)] hover:text-[var(--color-accent)]"
+                            >
+                                <EyeOff size={19} aria-hidden="true" />
+                            </button>
+                            <button
+                                type="button"
+                                aria-label="Más opciones"
+                                aria-haspopup="menu"
+                                aria-expanded={menu}
+                                onClick={() => setMenu(true)}
+                                disabled={isPending}
+                                className="rounded-full p-2 hover:bg-[rgba(29,155,240,0.1)] hover:text-[var(--color-accent)] disabled:opacity-50"
+                            >
+                                <MoreHorizontal size={20} aria-hidden="true" />
+                            </button>
+                            <Modal open={menu} onClose={() => setMenu(false)} title="Opciones del post" className="max-w-xs w-full p-0">
+                                <ul className="text-sm">
+                                    {isOwner ? (
+                                        <>
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setMenu(false)
+                                                        toast.info('La edición de posts no está disponible')
+                                                    }}
+                                                    className="flex w-full items-center gap-3 border-b border-[var(--color-border)] px-4 py-3 hover:bg-[var(--hover)]"
+                                                >
+                                                    <Pencil size={16} />
+                                                    Editar
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setMenu(false)
+                                                        setConfirm(true)
+                                                    }}
+                                                    className="flex w-full items-center gap-3 px-4 py-3 text-[var(--color-danger)] hover:bg-[var(--hover)]"
+                                                >
+                                                    <Trash2 size={16} />
+                                                    Eliminar
+                                                </button>
+                                            </li>
+                                        </>
+                                    ) : (
                                         <li>
                                             <button
                                                 type="button"
                                                 onClick={() => {
                                                     setMenu(false)
-                                                    toast.info('Editar post: próximamente')
+                                                    toast.info('Preferencias del feed no disponibles')
                                                 }}
-                                                className="flex w-full items-center gap-3 border-b border-[var(--color-border)] px-4 py-3 hover:bg-[var(--hover)]"
+                                                className="flex w-full items-center gap-3 px-4 py-3 hover:bg-[var(--hover)]"
                                             >
-                                                <Pencil size={16} />
-                                                Editar
+                                                <EyeOff size={16} />
+                                                No me interesa
                                             </button>
                                         </li>
-                                        <li>
-                                            <button
-                                                type="button"
-                                                onClick={() => {
-                                                    setMenu(false)
-                                                    setConfirm(true)
-                                                }}
-                                                className="flex w-full items-center gap-3 px-4 py-3 text-[var(--color-danger)] hover:bg-[var(--hover)]"
-                                            >
-                                                <Trash2 size={16} />
-                                                Eliminar
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </Modal>
-                            </>
-                        )}
+                                    )}
+                                </ul>
+                            </Modal>
+                        </div>
                     </header>
-                    <p className="mt-1 whitespace-pre-wrap break-words text-[15px] leading-normal">{post.content}</p>
-                    <footer className="mt-2 -ml-2 flex items-center justify-between max-w-md">
+                    <PostText content={post.content} />
+                    {mediaSrc && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                            src={mediaSrc}
+                            alt="Contenido multimedia del post"
+                            className="mt-3 aspect-video w-full rounded-[16px] border border-[var(--color-border)] object-cover"
+                        />
+                    )}
+                    <footer className="mt-3 -ml-2 flex max-w-[520px] items-center justify-between">
                         <ActionPlaceholder
                             icon={MessageCircle}
                             count={post.repliesCount ?? 0}
@@ -200,5 +242,31 @@ export function PostCard({ post }: PostCardProps) {
                 onCancel={() => setConfirm(false)}
             />
         </article>
+    )
+}
+
+function PostText({ content }: { content: string }) {
+    const parts = content.split(/(https?:\/\/[^\s]+|mouredev\.link\/desarrolloia)/gi)
+
+    return (
+        <p className="mt-1 whitespace-pre-wrap break-words text-[17px] leading-[1.4]">
+            {parts.map((part, index) => {
+                const isLink = /^(https?:\/\/|mouredev\.link\/desarrolloia)/i.test(part)
+                if (!isLink) return <span key={index}>{part}</span>
+
+                const href = /^https?:\/\//i.test(part) ? part : `https://${part}`
+                return (
+                    <a
+                        key={index}
+                        href={href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[var(--color-accent)] hover:underline"
+                    >
+                        {part}
+                    </a>
+                )
+            })}
+        </p>
     )
 }

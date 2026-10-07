@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" fill="none">
+  <defs>
+    <linearGradient id="background" x1="80" y1="40" x2="1060" y2="650" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06172B"/>
+      <stop offset=".55" stop-color="#020812"/>
+      <stop offset="1" stop-color="#00040A"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="80" y1="40" x2="1115" y2="635" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00D9FF"/>
+      <stop offset=".5" stop-color="#087DFF"/>
+      <stop offset="1" stop-color="#00CFFF"/>
+    </linearGradient>
+    <linearGradient id="shirt" x1="130" y1="410" x2="480" y2="680" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E6D8D5"/>
+      <stop offset="1" stop-color="#687A91"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="circuit" width="90" height="90" patternUnits="userSpaceOnUse">
+      <path d="M0 20h32l18 18h40M16 90V58l20-20M90 70H62l-12-12" stroke="#087DFF" stroke-opacity=".16" stroke-width="2"/>
+      <circle cx="32" cy="20" r="3" fill="#05CFFF" fill-opacity=".42"/>
+      <circle cx="16" cy="58" r="3" fill="#05CFFF" fill-opacity=".35"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="675" fill="url(#background)"/>
+  <rect width="1200" height="675" fill="url(#circuit)" opacity=".72"/>
+  <path d="M62 76 94 38h1012l34 38v520l-34 39H94l-32-39V76Z" stroke="#009FFF" stroke-opacity=".35" stroke-width="20" filter="url(#glow)"/>
+  <path d="M62 76 94 38h1012l34 38v520l-34 39H94l-32-39V76Z" stroke="url(#neon)" stroke-width="7"/>
+  <path d="M76 83 99 54h1001l26 29v506l-26 29H99l-23-29V83Z" stroke="#5FEAFF" stroke-opacity=".6" stroke-width="2"/>
+
+  <!-- Generic illustrated presenter silhouette; kept local so the preview needs no remote image. -->
+  <path d="M48 675c27-95 100-151 203-166 92-13 173 18 226 79l32 87H48Z" fill="url(#shirt)"/>
+  <path d="M187 461c-14-32-20-64-20-104 0-96 50-162 132-162 83 0 132 65 132 162 0 45-9 79-28 112l-10 34-190-2-16-40Z" fill="#171B26"/>
+  <ellipse cx="300" cy="338" rx="103" ry="126" fill="#D6A187"/>
+  <path d="M198 324c8-105 51-151 118-151 67 0 109 47 112 132-33-10-66-30-90-60-27 35-77 61-140 79Z" fill="#11131A"/>
+  <path d="M214 365c19-12 38-12 56 0M330 365c18-12 39-12 57 0" stroke="#25222A" stroke-width="9" stroke-linecap="round"/>
+  <path d="M285 388c12 8 23 8 35 0M259 427c28 21 59 22 88 0" stroke="#5C302A" stroke-width="8" stroke-linecap="round"/>
+  <path d="M221 426c28 33 52 47 82 47 31 0 59-16 83-49l-10 55c-24 31-47 42-75 42-30 0-59-15-76-43l-4-52Z" fill="#2D1D1C"/>
+  <path d="M237 493c35 29 85 31 128 0l30 55c-40 38-120 43-184 1l26-56Z" fill="#D6A187"/>
+  <path d="M135 675c22-87 65-130 132-143l43 70 48-70c73 14 116 56 139 143H135Z" fill="url(#shirt)"/>
+  <path d="m391 564 118-77 22 19-92 99-48-41Z" fill="#D6A187"/>
+  <path d="m497 486 53-49c11-10 27-9 35 3 7 10 4 24-6 32l-58 44-24-30Z" fill="#D6A187"/>
+
+  <text x="520" y="142" fill="#F6F9FF" font-family="Arial,Helvetica,sans-serif" font-size="53" font-weight="700">Curso</text>
+  <text x="693" y="142" fill="#00D8FF" font-family="Arial,Helvetica,sans-serif" font-size="53" font-weight="700">Gratis</text>
+  <text x="464" y="276" fill="#00DFFF" font-family="Arial,Helvetica,sans-serif" font-size="76" font-weight="900" letter-spacing="-2">DESARROLLO</text>
+  <text x="651" y="353" fill="#F5F8FF" font-family="Arial,Helvetica,sans-serif" font-size="66" font-weight="900">CON IA</text>
+  <text x="625" y="410" fill="#00CEFF" font-family="Arial,Helvetica,sans-serif" font-size="36" font-weight="700">el Nuevo Programador</text>
+  <path d="M656 454h386l24 26v87l-24 24H656l-24-24v-87l24-26Z" stroke="#00BFFF" stroke-width="5" filter="url(#glow)"/>
+  <text x="704" y="520" fill="#F7FAFF" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="800">QUEDAN 4 DÍAS</text>
+  <text x="704" y="565" fill="#00D8FF" font-family="Arial,Helvetica,sans-serif" font-size="26" font-weight="700">APÚNTATE GRATIS</text>
+</svg>

@@ -53,6 +53,7 @@ model Post {
   id String @id @default(cuid())
 
   content   String
+  mediaUrl  String?
   createdAt DateTime @default(now())
 
   authorId String

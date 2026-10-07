@@ -33,8 +33,9 @@ type ApiFetchInit = Omit<RequestInit, 'body'> & {
 export async function apiFetch<T>(path:string, init: ApiFetchInit = {}): Promise<T>{
     const url = path.startsWith('http') ? path : `${API_BASE}${path}`
     const headers = new Headers(init.headers)
+    const isFormData = typeof FormData !== 'undefined' && init.body instanceof FormData
 
-    if (!headers.has('Content-Type') && init.body !== undefined) {
+    if (!headers.has('Content-Type') && init.body !== undefined && !isFormData) {
         headers.set('Content-Type', 'application/json')
     }
 
@@ -46,10 +47,16 @@ export async function apiFetch<T>(path:string, init: ApiFetchInit = {}): Promise
     let res: Response
 
     try{
+        const body: BodyInit | undefined = init.body === undefined
+            ? undefined
+            : isFormData
+                ? init.body as FormData
+                : JSON.stringify(init.body)
+
         res = await fetch(url, {
             ...init,
             headers,
-            body: init.body === undefined ? undefined : JSON.stringify(init.body),
+            body,
             cache: 'no-store'
         })
     }catch(e){

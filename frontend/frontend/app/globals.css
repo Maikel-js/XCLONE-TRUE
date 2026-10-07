@@ -78,3 +78,21 @@ button, a {
 .divider {
     border-bottom: 1px solid var(--border);
 }
+
+.grok-space {
+    background:
+        radial-gradient(ellipse at 50% 40%, rgba(255, 255, 255, 0.018), transparent 36%),
+        #000;
+}
+
+.grok-star {
+    opacity: 0.55;
+    filter: blur(1px);
+    box-shadow: 0 0 7px rgba(255, 255, 255, 0.72);
+    animation: grok-twinkle 5s ease-in-out infinite;
+}
+
+@keyframes grok-twinkle {
+    0%, 100% { opacity: 0.28; }
+    50% { opacity: 0.8; }
+}

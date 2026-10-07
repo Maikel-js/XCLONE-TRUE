@@ -7,11 +7,12 @@ import { ComposerForm } from './ComposerForm'
 type Props = {
     trigger?: React.ReactNode
     compactTrigger?: React.ReactNode
+    triggerClassName?: string
     open?: boolean
     onClose?: () => void
 }
 
-export function ComposerDialog({ trigger, compactTrigger, open: controlledOpen, onClose }: Props) {
+export function ComposerDialog({ trigger, compactTrigger, triggerClassName, open: controlledOpen, onClose }: Props) {
     const [uncontrolledOpen, setUncontrolledOpen] = useState(false)
     const isControlled = controlledOpen !== undefined
     const open = isControlled ? controlledOpen : uncontrolledOpen
@@ -26,7 +27,7 @@ export function ComposerDialog({ trigger, compactTrigger, open: controlledOpen, 
                 type="button"
                 onClick={() => setOpen(true)}
                 aria-label="Crear post"
-                className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] px-6 text-lg font-bold text-white transition hover:bg-[var(--color-accent-hover)] md:h-14"
+                className={triggerClassName ?? 'inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-[var(--color-accent)] px-6 text-lg font-bold text-white transition hover:bg-[var(--color-accent-hover)] md:h-14'}
             >
                 {trigger ?? (
                     <>

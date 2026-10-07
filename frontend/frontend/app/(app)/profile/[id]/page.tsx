@@ -132,8 +132,8 @@ export default function ProfilePage() {
                 )
             ) : (
                 <EmptyState
-                    title="Próximamente"
-                    description="Las respuestas, multimedia y me gusta aún no están disponibles."
+                    title="Sin contenido todavía"
+                    description="Aún no hay respuestas, multimedia ni me gusta para mostrar."
                 />
             )}
             {isMe && (

@@ -21,13 +21,21 @@ async function getPostById(req, res) {
 }
 
 async function createPost(req, res) {
+    const content = typeof req.body.content === 'string' ? req.body.content : '';
+    const gifUrl = typeof req.body.gifUrl === 'string' ? req.body.gifUrl : null;
+
+    if (gifUrl && !isGiphyGifUrl(gifUrl)) {
+        return res.status(400).json({ error: 'El GIF seleccionado no es válido' });
+    }
+
     const postData = {
-        content: req.body.content,
+        content,
+        mediaUrl: req.file ? `/uploads/posts/${req.file.filename}` : gifUrl,
         authorId: req.userId
     };
 
-    if (!postData.content) {
-        return res.status(400).json({ error: 'El contenido del post es requerido' });
+    if (!postData.content && !postData.mediaUrl) {
+        return res.status(400).json({ error: 'Escribe algo o adjunta un medio para publicar' });
     }
 
     if (postData.content.length > 500) {
@@ -43,6 +51,15 @@ async function createPost(req, res) {
     }
 
     res.status(201).json(newPost);
+}
+
+function isGiphyGifUrl(value) {
+    try {
+        const url = new URL(value);
+        return url.protocol === 'https:' && /^media\d*\.giphy\.com$/i.test(url.hostname);
+    } catch {
+        return false;
+    }
 }
 
 async function updatePost(req, res) {
