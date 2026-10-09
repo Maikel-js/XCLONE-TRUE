@@ -66,3 +66,15 @@ export type CachedUser = User & {
     posts?: number
     location?: string
 }
+
+export type duration = {
+    days?: number
+    hours?: number
+    minutes?: number
+    seconds?: number
+}
+
+export type poll = {
+    duration: duration
+    options: string[]
+}

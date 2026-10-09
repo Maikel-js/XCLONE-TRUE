@@ -35,6 +35,8 @@ model User {
   following Follow[] @relation("UserFollowing")
 
   oauthAccounts OAuthAccount[]
+
+  votes PollVote[]
 }
 
 model OAuthAccount {
@@ -60,6 +62,8 @@ model Post {
   author   User   @relation("UserPosts", fields: [authorId], references: [id], onDelete: Cascade)
 
   likes Like[] @relation("PostLikes")
+
+  poll Poll?
 }
 
 model Like {
@@ -86,4 +90,50 @@ model Follow {
   following   User   @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
+}
+
+model Poll {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  postId String @unique
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  options PollOption[]
+  votes PollVote[]
+}
+
+model PollOption{
+  id String @id @default (cuid())
+
+  text String
+  position Int 
+  imageUrl String?
+
+  pollId String
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes PollVote[]
+  
+  @@unique([pollId, position])
+}
+
+model PollVote {
+  id String @id @default (cuid())
+
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  pollOptionId String
+  pollOption PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+
+  pollId String
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@unique([pollId, userId])
 }
