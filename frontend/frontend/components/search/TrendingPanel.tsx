@@ -6,17 +6,17 @@ export function TrendingPanel() {
     ]
 
     return (
-        <section className="overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]">
-            <h2 className="px-4 py-3 text-xl font-bold">Tendencias para ti</h2>
+        <section className="overflow-hidden rounded-[18px] border border-[var(--color-border)] bg-black">
+            <h2 className="px-5 py-4 text-xl font-bold 2xl:text-[28px]">Tendencias para ti</h2>
             <ul>
                 {trends.map((t) => (
                     <li
                         key={t.title}
-                        className="card-hover cursor-pointer border-t border-[var(--color-border)] px-4 py-3 text-sm"
+                        className="card-hover cursor-pointer border-t border-[var(--color-border)] px-5 py-4 text-sm 2xl:text-lg"
                     >
-                        <p className="text-xs text-[var(--color-muted)]">{t.category}</p>
+                        <p className="text-xs text-[var(--color-muted)] 2xl:text-base">{t.category}</p>
                         <p className="font-bold">{t.title}</p>
-                        <p className="text-xs text-[var(--color-muted)]">{t.posts}</p>
+                        <p className="text-xs text-[var(--color-muted)] 2xl:text-base">{t.posts}</p>
                     </li>
                 ))}
             </ul>

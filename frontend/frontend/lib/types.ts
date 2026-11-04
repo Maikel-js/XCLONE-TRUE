@@ -57,7 +57,7 @@ export type RegisterInput = {
 
 export type WsServerEnvelope<T = unknown> = { type: string; payload: T}
 
-export type CreatePostInput = { content: string; image?: File | null; gifUrl?: string }
+export type CreatePostInput = { content: string; image?: File | null; gifUrl?: string  | null; poll?: CreatePollInput }
 export type UpdateUserInput = Partial<Pick<User, 'username' | 'email' | 'displayName' | 'bio' | 'avatar'>>
 export type CachedUser = User & {
     following?: boolean
@@ -67,14 +67,13 @@ export type CachedUser = User & {
     location?: string
 }
 
-export type duration = {
-    days?: number
-    hours?: number
-    minutes?: number
-    seconds?: number
+export type PollDuration = {
+    days: number
+    hours: number
+    minutes: number
 }
 
-export type poll = {
-    duration: duration
+export type CreatePollInput = {
+    duration: PollDuration
     options: string[]
 }

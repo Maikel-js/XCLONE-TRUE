@@ -15,7 +15,7 @@ export function SearchBox() {
                 if (q) router.push(`/search?q=${encodeURIComponent(q)}`)
                 else router.push('/search')
             }}
-            className="sticky top-0 z-10 flex h-[48px] items-center rounded-full border border-[var(--color-border)] bg-black px-4 transition focus-within:border-[var(--color-accent)]"
+            className="sticky top-0 z-10 flex h-[48px] items-center rounded-full border border-[var(--color-border)] bg-black px-4 transition focus-within:border-[var(--color-accent)] 2xl:h-[60px]"
             role="search"
         >
             <div className="flex items-center gap-3">
@@ -25,7 +25,7 @@ export function SearchBox() {
                     onChange={(e) => setValue(e.target.value)}
                     placeholder="Search"
                     aria-label="Search"
-                    className="w-full bg-transparent text-base text-[var(--color-foreground)] placeholder:text-[var(--color-muted)] outline-none"
+                    className="w-full bg-transparent text-base text-[var(--color-foreground)] placeholder:text-[var(--color-muted)] outline-none 2xl:text-xl"
                 />
             </div>
         </form>

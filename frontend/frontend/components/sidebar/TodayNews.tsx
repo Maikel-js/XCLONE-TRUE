@@ -41,7 +41,7 @@ export function TodayNews() {
     return (
         <section className="overflow-hidden rounded-[18px] border border-[var(--color-border)]">
             <header className="flex items-center justify-between px-5 py-4">
-                <h2 className="text-[23px] font-bold leading-tight">Today’s News</h2>
+                <h2 className="text-[23px] font-bold leading-tight 2xl:text-[28px]">Today’s News</h2>
                 <button
                     type="button"
                     aria-label="Dismiss news"
@@ -55,8 +55,8 @@ export function TodayNews() {
                 {stories.map((story) => (
                     <li key={story.title} className="px-5 py-5 transition hover:bg-[var(--hover)]">
                         <article>
-                            <h3 className="text-[18px] font-bold leading-[1.35]">{story.title}</h3>
-                            <div className="mt-2 flex items-center gap-2 text-[14px] text-[var(--color-muted)]">
+                            <h3 className="text-[18px] font-bold leading-[1.35] 2xl:text-[21px]">{story.title}</h3>
+                            <div className="mt-2 flex items-center gap-2 text-[14px] text-[var(--color-muted)] 2xl:text-[17px]">
                                 <span className="flex shrink-0 items-center pl-0.5" aria-hidden="true">
                                     {story.people.map((person, index) => (
                                         <span

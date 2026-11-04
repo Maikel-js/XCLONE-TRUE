@@ -7,12 +7,13 @@ type ModalProps = {
     open: boolean
     onClose: () => void
     title?: string
+    ariaLabelledBy?: string
     hideClose?: boolean
     className?: string
     children: React.ReactNode
 }
 
-export function Modal({ open, onClose, title, hideClose, className, children }: ModalProps) {
+export function Modal({ open, onClose, title, ariaLabelledBy, hideClose, className, children }: ModalProps) {
     const ref = useRef<HTMLDialogElement | null>(null)
 
     useEffect(() => {
@@ -33,7 +34,7 @@ export function Modal({ open, onClose, title, hideClose, className, children }: 
     return (
         <dialog
             ref={ref}
-            aria-labelledby={title ? 'modal-title' : undefined}
+            aria-labelledby={ariaLabelledBy ?? (title ? 'modal-title' : undefined)}
             className={clsx(
                 'fixed left-1/2 top-1/2 m-0 -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] text-[var(--color-foreground)] backdrop:bg-black/70',
                 className ?? 'p-6 max-w-lg w-full'

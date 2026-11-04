@@ -49,18 +49,18 @@ export function Sidebar() {
     const profileHref = userId ? `/profile/${userId}` : '/profile'
 
     return (
-        <aside className="sticky top-0 hidden h-screen w-20 shrink-0 flex-col justify-between border-r border-[var(--color-border)] px-2 py-3 md:flex xl:w-[120px]">
-            <div className="flex flex-col items-center">
+        <aside className="sticky top-0 hidden h-screen min-w-0 flex-col justify-between border-r border-[var(--color-border)] px-3 py-3 md:flex md:w-full">
+            <div className="ml-auto flex w-full max-w-[320px] flex-col items-start">
                 <Link
                     href="/"
                     aria-label="XClone: inicio"
                     title="Inicio"
-                    className="mb-3 flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)] hover:bg-[var(--hover-strong)]"
+                    className="mb-3 ml-2 flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)] hover:bg-[var(--hover-strong)]"
                 >
                     <BrandMark size={30} />
                 </Link>
 
-                <nav aria-label="Navegación principal" className="flex flex-col items-center gap-2">
+                <nav aria-label="Navegación principal" className="flex w-full flex-col items-stretch gap-1">
                     {items.map(({ href, label, icon: Icon, match }) => {
                         const active = href
                             ? match
@@ -69,7 +69,7 @@ export function Sidebar() {
                             : false
 
                         const className = clsx(
-                            'nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]',
+                            'nav-pill flex h-14 w-full items-center justify-start gap-4 rounded-full px-4 text-[var(--color-foreground)]',
                             active && 'font-bold'
                         )
 
@@ -83,6 +83,7 @@ export function Sidebar() {
                                 className={className}
                             >
                                 <Icon size={28} strokeWidth={active ? 2.5 : 2} aria-hidden="true" />
+                                <span className="truncate text-lg 2xl:text-[27px]">{label}</span>
                             </Link>
                         ) : (
                             <button
@@ -94,6 +95,7 @@ export function Sidebar() {
                                 onClick={() => toast.info(`${label}: no disponible`)}
                             >
                                 <Icon size={28} aria-hidden="true" />
+                                <span className="truncate text-lg 2xl:text-[27px]">{label}</span>
                             </button>
                         )
                     })}
@@ -103,40 +105,48 @@ export function Sidebar() {
                         aria-label="Perfil"
                         aria-current={pathname.startsWith('/profile') ? 'page' : undefined}
                         title="Perfil"
-                        className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]"
+                        className="nav-pill flex h-14 w-full items-center justify-start gap-4 rounded-full px-4 text-[var(--color-foreground)]"
                     >
                         <User size={28} aria-hidden="true" />
+                        <span className="truncate text-lg 2xl:text-[27px]">Perfil</span>
                     </Link>
 
                     <button
                         type="button"
                         aria-label="Más opciones"
                         title="Más opciones"
-                        className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-foreground)]"
+                        className="nav-pill flex h-14 w-full items-center justify-start gap-4 rounded-full px-4 text-[var(--color-foreground)]"
                         onClick={() => toast.info('Más opciones no disponibles')}
                     >
                         <MoreHorizontal size={28} aria-hidden="true" />
+                        <span className="truncate text-lg 2xl:text-[27px]">Más opciones</span>
                     </button>
                 </nav>
 
-                <div className="mt-3 w-14">
+                <div className="mt-3 w-full px-2">
                     <ComposerDialog
-                        trigger={<Feather size={24} aria-hidden="true" />}
-                        triggerClassName="flex h-14 w-14 items-center justify-center rounded-full bg-[#eff3f4] text-black transition hover:bg-[#d7dbdc]"
+                        trigger={(
+                            <span className="flex items-center gap-3">
+                                <Feather size={24} aria-hidden="true" />
+                                <span>Publicar</span>
+                            </span>
+                        )}
+                        triggerClassName="flex h-14 w-full items-center justify-center rounded-full bg-[#eff3f4] px-5 text-lg font-bold text-black transition hover:bg-[#d7dbdc] 2xl:text-[25px]"
                     />
                 </div>
             </div>
 
-            <div className="flex flex-col items-center gap-2">
+            <div className="ml-auto flex w-full max-w-[320px] flex-col items-start gap-2">
                 <ConnectionDot />
                 <button
                     type="button"
                     onClick={logout}
                     aria-label="Cerrar sesión"
                     title="Cerrar sesión"
-                    className="nav-pill flex h-14 w-14 items-center justify-center rounded-full text-[var(--color-muted)]"
+                    className="nav-pill flex h-14 w-full items-center justify-start gap-4 rounded-full px-4 text-[var(--color-muted)]"
                 >
                     <LogOut size={24} aria-hidden="true" />
+                    <span className="text-lg 2xl:text-[27px]">Cerrar sesión</span>
                 </button>
             </div>
         </aside>

@@ -38,6 +38,9 @@ export const postApi = {
         body.append('content', input.content)
         if (input.image) body.append('image', input.image)
         if (input.gifUrl) body.append('gifUrl', input.gifUrl)
+        if (input.poll) {
+            body.append('poll', JSON.stringify(input.poll))
+        }
 
         return apiFetch<Post>('/posts', { method: 'POST', body })
     },

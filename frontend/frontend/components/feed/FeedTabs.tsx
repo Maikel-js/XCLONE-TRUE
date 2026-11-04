@@ -17,7 +17,7 @@ const TABS: { id: FeedTab; label: string }[] = [
 
 export function FeedTabs({ value, onChange }: Props) {
     return (
-        <div className="flex min-h-[52px] items-center border-b border-[var(--color-border)]">
+        <div className="flex min-h-[52px] items-center border-b border-[var(--color-border)] 2xl:min-h-[68px]">
             <div role="tablist" className="flex h-full min-w-0 flex-1">
                 {TABS.map((t) => {
                     const active = value === t.id
@@ -28,7 +28,7 @@ export function FeedTabs({ value, onChange }: Props) {
                             aria-selected={active}
                             onClick={() => onChange(t.id)}
                             className={clsx(
-                                'nav-pill relative flex-1 px-3 py-3 text-center text-[17px] font-medium transition sm:px-4',
+                                'nav-pill relative flex-1 px-3 py-3 text-center text-[17px] font-medium transition sm:px-4 2xl:text-[22px]',
                                 active ? 'font-bold text-[var(--color-foreground)]' : 'text-[var(--color-muted)]'
                             )}
                         >

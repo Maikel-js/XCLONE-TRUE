@@ -93,25 +93,25 @@ export function PostCard({ post }: PostCardProps) {
     }
 
     return (
-        <article className="border-b border-[var(--color-border)] px-5 py-4 transition hover:bg-[var(--hover)]">
+        <article className="border-b border-[var(--color-border)] px-5 py-4 transition hover:bg-[var(--hover)] 2xl:px-6 2xl:py-5">
             <div className="flex gap-3">
                 <Link href={`/profile/${post.author.id}`} aria-label={`Perfil de ${post.author.displayName}`}>
-                    <Avatar src={post.author.avatar} alt={post.author.displayName} />
+                    <Avatar src={post.author.avatar} alt={post.author.displayName} className="2xl:h-14 2xl:w-14" />
                 </Link>
                 <div className="min-w-0 flex-1">
                     <header className="flex items-start justify-between gap-2">
                         <div className="flex min-w-0 flex-wrap items-baseline gap-x-1">
-                            <Link href={`/profile/${post.author.id}`} className="truncate text-[17px] font-bold hover:underline">
+                            <Link href={`/profile/${post.author.id}`} className="truncate text-[17px] font-bold hover:underline 2xl:text-[22px]">
                                 {post.author.displayName}
                             </Link>
                             {isVerifiedDemoAuthor && (
                                 <BadgeCheck size={19} fill="var(--color-accent)" className="shrink-0 text-black" aria-label="Verified" />
                             )}
-                            <span className="truncate text-sm text-[var(--color-muted)]">
+                            <span className="truncate text-sm text-[var(--color-muted)] 2xl:text-base">
                                 @{post.author.username}
                             </span>
-                            <span className="text-sm text-[var(--color-muted)]">·</span>
-                            <time className="text-sm text-[var(--color-muted)]" dateTime={post.createdAt}>
+                            <span className="text-sm text-[var(--color-muted)] 2xl:text-base">·</span>
+                            <time className="text-sm text-[var(--color-muted)] 2xl:text-base" dateTime={post.createdAt}>
                                 {timeAgo(post.createdAt)}
                             </time>
                         </div>
@@ -195,7 +195,7 @@ export function PostCard({ post }: PostCardProps) {
                             className="mt-3 aspect-video w-full rounded-[16px] border border-[var(--color-border)] object-cover"
                         />
                     )}
-                    <footer className="mt-3 -ml-2 flex max-w-[520px] items-center justify-between">
+                    <footer className="mt-3 -ml-2 flex max-w-[520px] items-center justify-between 2xl:max-w-full">
                         <ActionPlaceholder
                             icon={MessageCircle}
                             count={post.repliesCount ?? 0}
@@ -249,7 +249,7 @@ function PostText({ content }: { content: string }) {
     const parts = content.split(/(https?:\/\/[^\s]+|mouredev\.link\/desarrolloia)/gi)
 
     return (
-        <p className="mt-1 whitespace-pre-wrap break-words text-[17px] leading-[1.4]">
+        <p className="mt-1 whitespace-pre-wrap break-words text-[17px] leading-[1.4] 2xl:text-[22px] 2xl:leading-7">
             {parts.map((part, index) => {
                 const isLink = /^(https?:\/\/|mouredev\.link\/desarrolloia)/i.test(part)
                 if (!isLink) return <span key={index}>{part}</span>
