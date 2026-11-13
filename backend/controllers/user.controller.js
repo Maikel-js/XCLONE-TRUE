@@ -197,7 +197,8 @@ async function updateUser(req, res) {
         'email',
         'displayName',
         'bio',
-        'avatar'
+        'avatar',
+        'postLocationEnabled'
     ];
 
     const receivedFields = Object.keys(userData);
@@ -281,7 +282,17 @@ async function updateUser(req, res) {
 
         if (typeof updateData.avatar !== 'string') {
             return res.status(400).json({
-                error: 'El avatar debe ser un texto'
+                error: 'La URL del avatar no es válida'
+            });
+        }
+
+    }
+
+    if (updateData.postLocationEnabled !== undefined) {
+
+        if (typeof updateData.postLocationEnabled !== 'boolean') {
+            return res.status(400).json({
+                error: 'La preferencia de ubicación debe ser un valor booleano'
             });
         }
 

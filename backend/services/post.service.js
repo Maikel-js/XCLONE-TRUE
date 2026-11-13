@@ -9,6 +9,11 @@ async function getPostById(postId) {
     const post = await prisma.post.findUnique({
         where: {
             id: postId
+        },
+        include: {
+            place: {
+                select: { id: true, name: true, locality: true, region: true, country: true }
+            }
         }
     });
     return post;
@@ -16,7 +21,12 @@ async function getPostById(postId) {
 
 async function createPost(postData) {
     const newPost = await prisma.post.create({
-        data: postData
+        data: postData,
+        include: {
+            place: {
+                select: { id: true, name: true, locality: true, region: true, country: true }
+            }
+        }
     });
 
     if (!newPost) {

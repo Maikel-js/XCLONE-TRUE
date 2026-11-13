@@ -34,6 +34,8 @@ model User {
   follower  Follow[] @relation("UserFollower")
   following Follow[] @relation("UserFollowing")
 
+  postLocationEnabled Boolean @default(false)
+
   oauthAccounts OAuthAccount[]
 
   votes PollVote[]
@@ -51,6 +53,22 @@ model OAuthAccount {
   @@unique([provider, providerAccountId])
 }
 
+model Place {
+  id       String  @id @default(cuid())
+  source   String // "foursquare" | "osm"
+  sourceId String
+  name     String
+  locality String?
+  region   String?
+  country  String?
+  lat      Float?
+  lng      Float?
+
+  posts Post[]
+
+  @@unique([source, sourceId])
+}
+
 model Post {
   id String @id @default(cuid())
 
@@ -60,6 +78,9 @@ model Post {
 
   authorId String
   author   User   @relation("UserPosts", fields: [authorId], references: [id], onDelete: Cascade)
+
+  placeId String?
+  place   Place? @relation(fields: [placeId], references: [id], onDelete: SetNull)
 
   likes Like[] @relation("PostLikes")
 
@@ -99,37 +120,37 @@ model Poll {
   expiresAt DateTime
 
   postId String @unique
-  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 
   options PollOption[]
-  votes PollVote[]
+  votes   PollVote[]
 }
 
-model PollOption{
-  id String @id @default (cuid())
+model PollOption {
+  id String @id @default(cuid())
 
-  text String
-  position Int 
+  text     String
+  position Int
   imageUrl String?
 
   pollId String
-  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
-  votes PollVote[]
-  
+  poll   Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  votes  PollVote[]
+
   @@unique([pollId, position])
 }
 
 model PollVote {
-  id String @id @default (cuid())
+  id String @id @default(cuid())
 
   userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   pollOptionId String
-  pollOption PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
+  pollOption   PollOption @relation(fields: [pollOptionId], references: [id], onDelete: Cascade)
 
   pollId String
-  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  poll   Poll   @relation(fields: [pollId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 

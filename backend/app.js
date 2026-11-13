@@ -20,6 +20,8 @@ const authRoute = require('./routes/auth.route')
 
 const feedRoute = require('./routes/feed.route')
 
+const placeRoute = require('./routes/place.route')
+
 //Rutas
 const healthRoute = require('./routes/health.route')
 
@@ -30,6 +32,7 @@ app.use('/likes', likeRoute)
 app.use('/follows', followRoute)
 app.use('/auth', authRoute)
 app.use('/feeds', feedRoute)
+app.use('/places', placeRoute)
 
 app.get('/', (req, res) => {
     res.send(`<h1>Bienvenido a la API de XClone</h1>

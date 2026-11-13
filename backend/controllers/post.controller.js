@@ -1,4 +1,6 @@
 const postService = require('../services/post.service');
+const placeService = require('../services/place.service');
+const prisma = require('../lib/prismaClient');
 
 async function getPostById(req, res) {
     const postId = req.params.id;
@@ -23,9 +25,27 @@ async function getPostById(req, res) {
 async function createPost(req, res) {
     const content = typeof req.body.content === 'string' ? req.body.content : '';
     const gifUrl = typeof req.body.gifUrl === 'string' ? req.body.gifUrl : null;
+    const placeId = typeof req.body.placeId === 'string' ? req.body.placeId : null;
 
     if (gifUrl && !isGiphyGifUrl(gifUrl)) {
         return res.status(400).json({ error: 'El GIF seleccionado no es válido' });
+    }
+
+    // Location opt-in: solo se puede postear con lugar si el usuario lo activo
+    let place = null;
+    if (placeId) {
+        const user = await prisma.user.findUnique({
+            where: { id: req.userId },
+            select: { postLocationEnabled: true }
+        });
+        if (!user?.postLocationEnabled) {
+            return res.status(403).json({ error: 'Debes activar la ubicacion en tus ajustes para etiquetar lugares' });
+        }
+
+        place = await placeService.getPlaceById(placeId);
+        if (!place) {
+            return res.status(400).json({ error: 'El lugar seleccionado no es valido' });
+        }
     }
 
     const postData = {
@@ -33,6 +53,10 @@ async function createPost(req, res) {
         mediaUrl: req.file ? `/uploads/posts/${req.file.filename}` : gifUrl,
         authorId: req.userId
     };
+
+    if (place) {
+        postData.placeId = place.id;
+    }
 
     if (!postData.content && !postData.mediaUrl) {
         return res.status(400).json({ error: 'Escribe algo o adjunta un medio para publicar' });

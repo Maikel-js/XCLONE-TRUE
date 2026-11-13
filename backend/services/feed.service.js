@@ -73,7 +73,10 @@ async function getUserFeed(userId, { limit, cursor, mode = 'for-you' }) {
                     avatar: true
                 }
             },
-            _count: { select: { likes: true } }
+            _count: { select: { likes: true } },
+            place: {
+                select: { id: true, name: true, locality: true, region: true, country: true }
+            }
         }
     });
 
@@ -106,7 +109,8 @@ async function getUserFeed(userId, { limit, cursor, mode = 'for-you' }) {
         authorId: p.authorId,
         author: p.author,
         likesCount: p._count.likes,
-        likedByMe: likedSet.has(p.id)
+        likedByMe: likedSet.has(p.id),
+        place: p.place
     }));
 
     //9 nextCursor (opaco)

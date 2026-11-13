@@ -171,7 +171,7 @@ async function authenticate(provider, code, verifier, nonce) {
         throw new Error('El correo de Google no está verificado');
     }
     const { user, created } = await findOrCreateUser(provider, claims);
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '1h' });
     try {
         if (created) {
             emitUserRegistered({ userId: user.id, username: user.username, displayName: user.displayName });
