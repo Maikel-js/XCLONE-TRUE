@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import clsx from 'clsx'
-import { BadgeCheck, EyeOff, MoreHorizontal, MessageCircle, Repeat2, Bookmark, Share, Trash2, Pencil } from 'lucide-react'
+import { BadgeCheck, EyeOff, MoreHorizontal, MessageCircle, Repeat2, Bookmark, Share, Trash2, Pencil, MapPin } from 'lucide-react'
 import { Avatar } from '../ui/Avatar'
 import { Modal } from '../ui/Modal'
 import { ConfirmDialog } from '../ui/ConfirmDialog'
@@ -187,6 +187,17 @@ export function PostCard({ post }: PostCardProps) {
                         </div>
                     </header>
                     <PostText content={post.content} />
+                    {post.place && (
+                        <p className="mt-1 flex items-center gap-1 text-sm text-[var(--color-muted)]">
+                            <MapPin size={14} aria-hidden="true" />
+                            <span className="truncate">
+                                {post.place.name}
+                                {post.place.locality && post.place.locality !== post.place.name
+                                    ? ` · ${post.place.locality}`
+                                    : ''}
+                            </span>
+                        </p>
+                    )}
                     {mediaSrc && (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img

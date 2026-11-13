@@ -34,12 +34,15 @@ const INITIAL_STATE: AuthState = {
     isBootstrapping: true,
 }
 
-function decodeJwt(token: string): { sub?: string; userId?: string; username?: string } | null {
+function decodeJwt(token: string): { userId?: string; username?: string } | null {
     try {
         const part = token.split('.')[1]
         if (!part) return null
         const json = atob(part.replace(/-/g, '+').replace(/_/g, '/'))
-        return JSON.parse(json)
+        const payload = JSON.parse(json) as { userId?: string; sub?: string; id?: string; username?: string }
+        const userId = payload.userId ?? payload.sub ?? payload.id
+        if (!userId) return null
+        return { userId, username: payload.username ?? undefined }
     }catch{
         return null
     }
@@ -53,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const payload = decodeJwt(token)
         return {
             token,
-            userId: payload?.userId ?? payload?.sub ?? null,
+            userId: payload?.userId ?? null,
             username: payload?.username ?? null,
             isBootstrapping: true,
         }
@@ -73,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 const payload = decodeJwt(token)
                 setState({
                     token,
-                    userId: user?.id ?? payload?.userId ?? payload?.sub ?? null,
+                    userId: user?.id ?? payload?.userId ?? null,
                     username: user?.username ?? payload?.username ?? null,
                     isBootstrapping: false,
                 })
@@ -100,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const decoded = decodeJwt(token)
             setState({
                 token,
-                userId: payload?.userId ?? decoded?.userId ?? decoded?.sub ?? null,
+                userId: payload?.userId ?? decoded?.userId ?? null,
                 username: payload?.username ?? decoded?.username ?? null,
                 isBootstrapping: false,
             })

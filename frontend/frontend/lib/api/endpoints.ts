@@ -4,6 +4,7 @@ import type {
     CreatePostInput,
     FeedPage,
     LoginInput,
+    Place,
     Post,
     RegisterInput,
     UpdateUserInput,
@@ -38,6 +39,7 @@ export const postApi = {
         body.append('content', input.content)
         if (input.image) body.append('image', input.image)
         if (input.gifUrl) body.append('gifUrl', input.gifUrl)
+        if (input.placeId) body.append('placeId', input.placeId)
         if (input.poll) {
             body.append('poll', JSON.stringify(input.poll))
         }
@@ -45,6 +47,11 @@ export const postApi = {
         return apiFetch<Post>('/posts', { method: 'POST', body })
     },
     delete: (id: string) => apiFetch<Post>(`/posts/${id}`, { method: 'DELETE' })
+}
+
+export const placeApi = {
+    search: (q: string, limit = 10) =>
+        apiFetch<Place[]>(`/places/search?q=${encodeURIComponent(q)}&limit=${limit}`),
 }
 
 export const likeApi = {

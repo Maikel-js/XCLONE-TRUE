@@ -9,7 +9,8 @@ import { useCreatePost } from '@/lib/api/hooks/useCreatePost'
 import { useMe } from '@/lib/api/hooks/useMe'
 import { useAuth } from '@/lib/auth/useAuth'
 import { GifPicker, type GiphyGif } from './GifPicker'
-import { type CreatePollInput } from '@/lib/types'
+import { type CreatePollInput, type Place } from '@/lib/types'
+import { LocationPicker } from './LocationPicker'
 import { EmojiPickerPanel } from './EmojiPicker'
 import { SchedulePostModal } from './SchedulePostModal'
 
@@ -57,9 +58,11 @@ export function ComposerForm({ autoFocus, onDone }: Props) {
     const [pollDraft, setPollDraft] = useState<CreatePollInput | null>(null)
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false)
     const [scheduleOpen, setScheduleOpen] = useState(false)
+    const [locPickerOpen, setLocPickerOpen] = useState(false)
     const [scheduleDate, setScheduleDate] = useState('')
     const [scheduleTime, setScheduleTime] = useState('')
     const [scheduleMinDate, setScheduleMinDate] = useState('')
+    const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
     const value = useWatch({ control, name: 'content', defaultValue: '' }) ?? ''
     const remaining = MAX - value.length
     const overLimit = remaining < 0
@@ -118,11 +121,12 @@ export function ComposerForm({ autoFocus, onDone }: Props) {
 
     async function onSubmit({ content }: { content: string }) {
         setLastError(null)
-        mutate({ content, image: selectedImage?.file, gifUrl: selectedGif?.originalUrl }, {
+        mutate({ content, image: selectedImage?.file, gifUrl: selectedGif?.originalUrl, placeId: selectedPlace?.id ?? null }, {
             onSuccess: () => {
                 reset({ content: '' })
                 setSelectedImage(null)
                 setSelectedGif(null)
+                setSelectedPlace(null)
                 toast.success('Publicado')
                 onDone?.()
             },
@@ -268,6 +272,22 @@ export function ComposerForm({ autoFocus, onDone }: Props) {
                             </button>
                         </div>
                     )}
+                    {selectedPlace && (
+                        <div className="mt-3 flex w-fit">
+                            <LocationPicker selected={selectedPlace} onSelect={setSelectedPlace} />
+                        </div>
+                    )}
+                    {locPickerOpen && !selectedPlace && (
+                        <div className="mt-3 max-w-md">
+                            <LocationPicker
+                                selected={null}
+                                onSelect={(place) => {
+                                    setSelectedPlace(place)
+                                    setLocPickerOpen(false)
+                                }}
+                            />
+                        </div>
+                    )}
                     {(selectedImage || selectedGif) && (
                         <div className="mt-3 flex items-center gap-3 rounded-2xl border border-[var(--color-border)] p-3">
                             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -332,7 +352,7 @@ export function ComposerForm({ autoFocus, onDone }: Props) {
                                 onClick={() => setGifPickerOpen(true)}
                             >
                                 GIF
-                            </button>
+                            </button> 
                             <ComposerTool label="Grok" icon={Sparkles} />
                             <ComposerTool
                                 label="Poll"
@@ -365,7 +385,11 @@ export function ComposerForm({ autoFocus, onDone }: Props) {
                                 icon={CalendarClock}
                                 onClick={openScheduleModal}
                             />
-                            <ComposerTool label="Location" icon={MapPin} />
+                            <ComposerTool
+                                label="Location"
+                                icon={MapPin}
+                                onClick={() => setLocPickerOpen((open) => !open)}
+                            />
                             <ComposerTool label="Content warning" icon={Flag} />
                         </div>
                         <div className="flex shrink-0 items-center gap-2 pl-2">

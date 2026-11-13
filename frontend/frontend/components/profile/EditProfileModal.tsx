@@ -20,6 +20,7 @@ const schema = z.object({
     displayName: z.string().min(1, 'Requerido'),
     bio: z.string().max(160, 'Máximo 160 caracteres').optional(),
     avatar: z.union([z.literal(''), z.string().url('Debe ser una URL válida')]).optional(),
+    postLocationEnabled: z.boolean().optional(),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -44,6 +45,7 @@ export function EditProfileModal({ open, onClose, user }: Props) {
                 displayName: user.displayName,
                 bio: user.bio ?? '',
                 avatar: user.avatar ?? '',
+                postLocationEnabled: user.postLocationEnabled ?? false,
             })
         }
     }, [open, user, reset])
@@ -68,6 +70,15 @@ export function EditProfileModal({ open, onClose, user }: Props) {
                 <Input placeholder="Nombre a mostrar" {...register('displayName')} error={errors.displayName?.message} />
                 <Input placeholder="Bio" {...register('bio')} error={errors.bio?.message} />
                 <Input placeholder="URL del avatar (https://…)" {...register('avatar')} error={errors.avatar?.message} />
+                <label className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] p-3">
+                    <input type="checkbox" {...register('postLocationEnabled')} className="h-5 w-5 accent-[var(--color-accent)]" />
+                    <span className="text-sm">
+                        Añadir ubicación a mis posts
+                        <span className="block text-xs text-[var(--color-muted)]">
+                            Permite etiquetar un lugar al publicar (estilo X, opt-in)
+                        </span>
+                    </span>
+                </label>
                 <div className="flex justify-end gap-2">
                     <Button type="button" variant="ghost" onClick={onClose}>
                         Cancelar

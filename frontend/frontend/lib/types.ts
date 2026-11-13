@@ -6,6 +6,7 @@ export type User = {
     bio: string | null
     avatar: string | null
     createdAt: string
+    postLocationEnabled?: boolean
 }
 
 export type Author = Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>
@@ -22,6 +23,17 @@ export type Post = {
     repliesCount?: number
     repostsCount?: number
     bookmarkedByMe?: boolean
+    place?: Place | null
+}
+
+export type Place = {
+    id: string
+    source: string
+    sourceId: string
+    name: string
+    locality?: string | null
+    region?: string | null
+    country?: string | null
 }
 
 export type FeedPage = {
@@ -57,7 +69,7 @@ export type RegisterInput = {
 
 export type WsServerEnvelope<T = unknown> = { type: string; payload: T}
 
-export type CreatePostInput = { content: string; image?: File | null; gifUrl?: string  | null; poll?: CreatePollInput }
+export type CreatePostInput = { content: string; image?: File | null; gifUrl?: string  | null; poll?: CreatePollInput; placeId?: string | null }
 export type UpdateUserInput = Partial<Pick<User, 'username' | 'email' | 'displayName' | 'bio' | 'avatar'>>
 export type CachedUser = User & {
     following?: boolean
